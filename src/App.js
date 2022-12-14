@@ -4,7 +4,7 @@ import { Button, Navbar, Container, Nav } from "react-bootstrap";
 function App() {
   return (
     <div className='App'>
-      <Button variant='primary'>Primary</Button>{" "}
+      <Button variant='primary'>버튼</Button>{" "}
       <Navbar bg='dark' variant='dark'>
         <Container>
           <Navbar.Brand href='#home'>Navbar</Navbar.Brand>
