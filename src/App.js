@@ -48,7 +48,7 @@ function App() {
               <div className="container">
                 <div className="row">
                   {shoes.map((a, i) => {
-                    return <Product shoes={shoes[i]} i={i} />;
+                    return <Product shoes={shoes[i]} i={i} navigate={navigate} />;
                   })}
                 </div>
               </div>
@@ -84,6 +84,7 @@ function Product(props) {
           "https://codingapple1.github.io/shop/shoes" + (props.i + 1) + ".jpg"
         }
         width="80%"
+        onClick={()=>{props.navigate("/detail/"+(props.i)+"");}}
       />
       <h4>{props.shoes.title}</h4>
       <p>{props.shoes.price}</p>
