@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {Nav} from "react-bootstrap";
 
 function Detail(props) {
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
-  let { id } = useParams();
+  let {id} = useParams();
+  let [tap, setTap] = useState(0);
+
   let 찾은상품 = props.shoes.find(function (x) {
     return x.id == id;
   });
-
 
   useEffect(() => {
     //랜더링 후에 작동
@@ -54,6 +56,69 @@ function Detail(props) {
           <button className="btn btn-danger">주문하기</button>
         </div>
       </div>
+
+      <Nav variant="tabs" defaultActiveKey="link0">
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link0"
+            onClick={() => {
+              setTap(0);
+            }}
+          >
+            버튼0
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link1"
+            onClick={() => {
+              setTap(1);
+            }}
+          >
+            버튼1
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link2"
+            onClick={() => {
+              setTap(2);
+            }}
+          >
+            버튼2
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+      <TapContent tap={tap} shoes={props.shoes}></TapContent>
+    </div>
+  );
+}
+
+function TapContent({tap,shoes}) {
+  // if (tap === 0) {
+  //   return<div>내용0</div>
+  // }
+  // if (tap === 1) {
+  //   return<div>내용1</div>
+  // }
+  // if (tap === 2) {
+  //   return<div>내용2</div>
+  // }
+
+  let [fade, setFade] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFade("end");
+    }, 10);
+    return () => {
+      setFade("");
+    };
+  }, [tap]);
+
+  return (
+    <div className={`start ${fade}`}>
+      {[<div>{shoes[0].title}</div>, <div>내용1</div>, <div>내용2</div>][tap]}
     </div>
   );
 }
