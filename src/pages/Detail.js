@@ -1,8 +1,12 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {Nav} from "react-bootstrap";
+import { Nav } from "react-bootstrap";
+import {useDispatch, useSelector} from "react-redux";
+import { addItem } from "../store";
 
 function Detail(props) {
+  let dispatch = useDispatch();
+
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
   let {id} = useParams();
@@ -53,7 +57,11 @@ function Detail(props) {
           <h4 className="pt-5">{찾은상품.title}</h4>
           <p>{찾은상품.content}</p>
           <p>{찾은상품.price}</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button className="btn btn-danger" onClick={() => {
+            dispatch(addItem(찾은상품))
+          }}>
+            주문하기
+          </button>
         </div>
       </div>
 
@@ -94,7 +102,7 @@ function Detail(props) {
   );
 }
 
-function TapContent({tap,shoes}) {
+function TapContent({tap, shoes}) {
   // if (tap === 0) {
   //   return<div>내용0</div>
   // }
