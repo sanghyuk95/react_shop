@@ -17,6 +17,9 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+.ms-auto {
+  color: white;
+}
 
 .App-logo {
   height: 40vmin;

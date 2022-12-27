@@ -1,18 +1,36 @@
 import "./App.css";
-import {Navbar, Container, Nav, Row, Col} from "react-bootstrap";
+import { Navbar, Container, Nav, Row, Col } from "react-bootstrap";
 import bg from "./img/shoe.jpg";
 // 임포트 부터 하고 써야함 외부링크는 그냥가능
-import {useState} from "react";
+import { useEffect, useState } from "react";
 import data from "./data.js";
 import Detail from "./pages/Detail.js";
-import {Routes, Route, Link, useNavigate, Outlet} from "react-router-dom";
+import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Cart from "./pages/Cart.js";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
+  useEffect(() => {
+    if (localStorage.getItem("watched")) {
+      return;
+    }
+    localStorage.setItem("watched", JSON.stringify([]));
+  }, []);
+
   let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
   let [click, setClick] = useState(0);
+
+  let result = useQuery(["작명"], () => {
+    return (
+      axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+        console.log("요청됨");
+        return a.data;
+      })
+      //{ staleTime: 2000 }   // 재요청 간격
+    );
+  });
 
   return (
     <div className="App">
@@ -44,6 +62,10 @@ function App() {
               cart
             </Nav.Link>
           </Nav>
+          <Nav className="ms-auto">
+            반가워요
+            {result.isLoading ? "로딩중" : result.data.name}
+          </Nav>
         </Container>
       </Navbar>
 
@@ -52,16 +74,11 @@ function App() {
           path="/"
           element={
             <>
-              <div
-                className="main-bg"
-                style={{backgroundImage: "url(" + bg + ")"}}
-              ></div>
+              <div className="main-bg" style={{ backgroundImage: "url(" + bg + ")" }}></div>
               <div className="container">
                 <div className="row">
                   {shoes.map((a, i) => {
-                    return (
-                      <Product shoes={shoes[i]} i={i} navigate={navigate} />
-                    );
+                    return <Product shoes={shoes[i]} i={i} navigate={navigate} />;
                   })}
                 </div>
               </div>
@@ -72,17 +89,11 @@ function App() {
                     return;
                   }
                   setClick(click + 1);
-                  axios
-                    .get(
-                      `https://codingapple1.github.io/shop/data${
-                        click + 2
-                      }.json`
-                    )
-                    .then((result) => {
-                      console.log(result.data);
-                      let copy = [...shoes, ...result.data];
-                      setShoes(copy);
-                    });
+                  axios.get(`https://codingapple1.github.io/shop/data${click + 2}.json`).then((result) => {
+                    console.log(result.data);
+                    let copy = [...shoes, ...result.data];
+                    setShoes(copy);
+                  });
                 }}
               >
                 더보기
@@ -101,9 +112,7 @@ function Product(props) {
   return (
     <div className="col-md-4">
       <img
-        src={
-          "https://codingapple1.github.io/shop/shoes" + (props.i + 1) + ".jpg"
-        }
+        src={"https://codingapple1.github.io/shop/shoes" + (props.i + 1) + ".jpg"}
         width="80%"
         onClick={() => {
           props.navigate("/detail/" + props.i + "");

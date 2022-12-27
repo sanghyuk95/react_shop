@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { json, useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../store";
 
 function Detail(props) {
@@ -9,12 +9,21 @@ function Detail(props) {
 
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
-  let {id} = useParams();
+  let { id } = useParams();
   let [tap, setTap] = useState(0);
 
   let 찾은상품 = props.shoes.find(function (x) {
     return x.id == id;
   });
+
+  useEffect(() => {
+    let locaId = localStorage.getItem('watched')
+    locaId = JSON.parse(locaId)
+    locaId.push(찾은상품.id)
+    locaId = new Set(locaId)
+    locaId = Array.from(locaId)
+    localStorage.setItem('watched',JSON.stringify(locaId))
+  }, []);
 
   useEffect(() => {
     //랜더링 후에 작동
@@ -57,9 +66,12 @@ function Detail(props) {
           <h4 className="pt-5">{찾은상품.title}</h4>
           <p>{찾은상품.content}</p>
           <p>{찾은상품.price}</p>
-          <button className="btn btn-danger" onClick={() => {
-            dispatch(addItem(찾은상품))
-          }}>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              dispatch(addItem(찾은상품));
+            }}
+          >
             주문하기
           </button>
         </div>
@@ -102,7 +114,7 @@ function Detail(props) {
   );
 }
 
-function TapContent({tap, shoes}) {
+function TapContent({ tap, shoes }) {
   // if (tap === 0) {
   //   return<div>내용0</div>
   // }
