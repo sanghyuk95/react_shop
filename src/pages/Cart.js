@@ -1,13 +1,36 @@
-import {Table} from "react-bootstrap";
-import {useDispatch, useSelector} from "react-redux";
-import {change,increase,incount} from "../store";
+import { memo,useMemo, useState } from "react";
+import { Table } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { increase, incount } from "../store";
+
+let Child = memo(function () {//memo props가 변경될때만 재랜더링
+  console.log("aa");
+  return <div>자식임</div>;
+});
+
+function 함수() {
+  return '반복문 10억번'
+}
+
 
 function Cart() {
   let state = useSelector((state) => state);
   let dispatch = useDispatch();
+  let [count, setCount] = useState(0);
+
+  useMemo(()=>{return 함수()},[state])//컴포넌트 랜더링시 1회만 실행해줌
+
 
   return (
     <div>
+      <Child></Child>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        +
+      </button>
       <h3>
         {state.user.name} {state.user.age}의 장바구니
       </h3>
